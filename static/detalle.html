@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Creación de factura</title>
+        <script type="text/javascript">
+            /*function chkName()
+            {
+                const dvError = document.getElementById("dvError");
+                const edName = document.getElementById("edName").value;
+                let toret = true;
+                dvError.style.display = "none";
+
+                if (edName == null || edName.length == 0){
+                    const np = document.createElement("p");
+
+                    np.textContent = "ERROR: no hay nombre";
+                    dvError.style.display="block";
+                    dvError.appendChild(np);
+                    return false;
+                }
+
+                return true;
+            }*/
+
+            function chkName()
+            {
+                const form = document.getElementById("frmInputName");
+                const dvError = document.getElementById("dvError");
+
+                for (j in form.childNodes){
+                    var i = form.childNodes[j]
+                    if(i.type == "text" && (i.value.length === 0 || i.value == null)){
+                        const np = document.createElement("p");
+
+                        np.textContent = "ERROR: no hay " + i.name;
+                        dvError.style.display="block";
+                        dvError.appendChild(np);
+                        return false;
+                    }
+
+                }
+                return true
+            }
+        </script>
+    </head>
+    <body>
+        <h2>FacturaPlus</h2>
+        <h2>Paso 3 de 4: linea de detalle</h2>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="4" value="3" class="slider" id="myRange" disabled="true">
+        </div>
+        <form id="frmInputName"
+                method="POST"
+                action="/verfactura"
+                onsubmit="return chkName()"
+                >
+                <label for="concepto">concepto</label>
+            <input type="text" id="concepto" name="concepto"/>
+            <br>
+            <label for="precio">precio</label>
+            <input type="text" id="precio" name="precio"/>
+            <br>
+            <label for="preciopu">precio p.u.</label>
+            <input type="text" id="preciopu" name="preciopu"/>
+            <br>
+            <label for="unidades">unidades</label>
+            <input type="text" id="unidades" name="unidades"/>
+            <br>
+            <label for="imptbruto">importe bruto</label>
+            <input type="text" id="imptbruto" name="imptbruto"/>
+            <br>
+            <label for="iva">% IVA</label>
+            <input type="text" id="iva" name="iva" />
+            <br>
+            <label for="impttotal">Importe total</label>
+            <input type="text" id="impttotal" name="impttotal"/>
+            <br>
+            <input type="submit" id="btSubmit" value="Ok"/>
+        </form>
+
+        <div id="dvError" style="background-color: red; color: white; display: none;">
+        </div>
+    </body>
+</html>
