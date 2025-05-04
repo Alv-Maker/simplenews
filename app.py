@@ -40,6 +40,19 @@ def noticia_page(noticia_id):
         return flask.render_template("noticia.html", noticia=noticia, sesion = True)
     else:
         return flask.abort(404)
+    
+@app.route("/noticias/b/")
+def busqueda():
+    query = flask.request.args.get("q")
+    if query is None:
+        return flask.abort(404)
+    if not query:
+        return flask.redirect("/noticias")
+    
+    noticias = srp.load_all(Noticia)
+    resultados = [n for n in noticias if query.lower() in n.titulo.lower() or query.lower() in n.subtitulo.lower()]
+    return flask.render_template("noticias.html", noticias = resultados, sesion = True)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

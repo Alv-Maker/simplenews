@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Creación de factura</title>
+        <script type="text/javascript">
+            /*function chkName()
+            {
+                const dvError = document.getElementById("dvError");
+                const edName = document.getElementById("edName").value;
+                let toret = true;
+                dvError.style.display = "none";
+
+                if (edName == null || edName.length == 0){
+                    const np = document.createElement("p");
+
+                    np.textContent = "ERROR: no hay nombre";
+                    dvError.style.display="block";
+                    dvError.appendChild(np);
+                    return false;
+                }
+
+                return true;
+            }*/
+
+            function chkName()
+            {
+                const form = document.getElementById("frmInputName");
+                const dvError = document.getElementById("dvError");
+
+                for (j in form.childNodes){
+                    var i = form.childNodes[j]
+                    if(i.type == "text" && (i.value.length === 0 || i.value == null)){
+                        const np = document.createElement("p");
+
+                        np.textContent = "ERROR: no hay " + i.name;
+                        dvError.style.display="block";
+                        dvError.appendChild(np);
+                        return false;
+                    }
+
+                }
+                return true
+            }
+        </script>
+    </head>
+    <body>
+        <h2>FacturaPlus</h2>
+        <h2>Paso 2 de 4: datos del cliente</h2>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="4" value="2" class="slider" id="myRange" disabled="true">
+        </div>
+        <form id="frmInputName"
+                method="POST"
+                action="/lineadetalle"
+                onsubmit="return chkName()"
+                >
+                <label for="cif">CIF</label>
+            <input type="text" id="cif" name="cif"/>
+            <br>
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre"/>
+            <br>
+            <label for="direccion">direccion</label>
+            <input type="text" id="direccion" name="direccion"/>
+            <br>
+            <label for="poblacion">poblacion</label>
+            <input type="text" id="poblacion" name="poblacion"/>
+            <br>
+            <label for="provincia">Provincia</label>
+            <input type="text" id="provincia" name="provincia"/>
+            <br>
+            <label for="CP">Codigo postal:</label>
+            <input type="text" id="CP" name="CP" />
+            <br>
+            <label for="pais">País</label>
+            <input type="text" id="pais" name="pais"/>
+            <br>
+            <label for="pers">Persona de contacto</label>
+            <input type="text" id="pers" name="pers"/>
+            <br>
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email"/>
+            <br>
+            <label for="tlf">Teléfono</label>
+            <input type="text" id="tlf" name="tlf"/>
+            <br>
+            <input type="submit" id="btSubmit" value="Ok"/>
+        </form>
+
+        <div id="dvError" style="background-color: red; color: white; display: none;">
+        </div>
+    </body>
+</html>
