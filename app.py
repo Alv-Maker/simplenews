@@ -21,6 +21,8 @@ srp = sirope.Sirope()
 #srp.save(noticias[2])
 #srp.save(noticias[3])
 
+appdata = {"session": True}
+
 @app.route("/")
 def index():
     return flask.send_from_directory(app.static_folder, "index.html")
@@ -30,14 +32,15 @@ def noticias_page():
     noticias = srp.load_all(Noticia)
     if not noticias:
         return flask.abort(404)
-    return flask.render_template("noticias.html", noticias=noticias, sesion = True)
+    print("session", appdata["session"])
+    return flask.render_template("noticias.html", noticias=noticias, sesion = appdata["session"])
 
 @app.route("/noticia/<int:noticia_id>")
 def noticia_page(noticia_id):
     noticias = srp.load_all(Noticia)
     noticia = next((n for n in noticias if n.ID == noticia_id), None)
     if noticia:
-        return flask.render_template("noticia.html", noticia=noticia, sesion = True)
+        return flask.render_template("noticia.html", noticia=noticia, sesion = appdata["session"])
     else:
         return flask.abort(404)
     
@@ -51,10 +54,31 @@ def busqueda():
     
     noticias = srp.load_all(Noticia)
     resultados = [n for n in noticias if query.lower() in n.titulo.lower() or query.lower() in n.subtitulo.lower()]
-    return flask.render_template("noticias.html", noticias = resultados, sesion = True)
+    return flask.render_template("noticias.html", noticias = resultados)
+
+@app.route("/noticias/publicar/")
+def publicar():
+    return flask.send_from_directory(app.static_folder, "crear-noticia.html")
+
+@app.route("/api/c/noticia", methods = ["POST"])
+def publicar_endpoint():
+    titulo = flask.request.form.get("titulo")
+    subtitulo = flask.request.form.get("subtitulo")
+    contenido = flask.request.form.get("contenido")
+    srp.save(Noticia(titulo, subtitulo, contenido, "Redaccion"))
+    return flask.redirect("/noticias")
+
+@app.route("/api/l/logout", methods = ["POST"])
+def logout():
+    appdata["session"] = False
+    return flask.send_from_directory("/noticias")
+
+
+#@app.errorhandler(404)
+#def not_found(code):
+#    return flask.abort(404)
+
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-    for noticia in noticias:
-        print(f"ID: {noticia.ID}, Titulo: {noticia.titulo}, Subtitulo: {noticia.subtitulo}, Contenido: {noticia.contenido}, Vistas: {noticia.vistas}, Likes: {noticia.likes}")

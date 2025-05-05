@@ -35,13 +35,16 @@
         </div>
         {% else %}
         <div class="text-end">
-          <button type="button" class="btn btn-outline-light me-2">Cerrar sesión</button>
+          <button type="button" class="btn btn-outline-light me-2" onclick="fetch('/api/l/logout', {
+            method: 'POST',
+        })">Cerrar sesión</button>
           <button type="button" class="btn btn-warning">Perfil</button>
         </div>
         {% endif %}
       </div>
   </header>
 
+  <button class="btn btn-success" onclick="window.location.href='/noticias/publicar/'" >Crear noticia</button>
 
 
   <h2>Últimas noticias:</h2>
