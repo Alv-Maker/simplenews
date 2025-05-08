@@ -3,8 +3,13 @@ import jinja2
 import flask_login
 import sirope
 from models.noticia import Noticia
+from noticias.noticias import noticiasb
+
 
 app = flask.Flask(__name__)
+
+
+app.register_blueprint(noticiasb, url_prefix="/noticias")
 
 noticias = [Noticia("Cae la bolsa", "La bolsa española cae un 10%", "La bolsa ha caído un 10% en la última semanaLos mercados financieros han experimentado una fuerte corrección en los últimos días, con una caída acumulada superior al 10% en la última semana. La incertidumbre económica y las tensiones comerciales han sido factores clave en este desplome, afectando a los principales índices bursátiles.\
 \n\nEl S&P 500 ha perdido un 1.4% en la jornada más reciente, mientras que el Dow Jones cayó un 1.45% y el Nasdaq un 2%. La volatilidad ha sido extrema, con oscilaciones de cientos de puntos en cuestión de horas.\
@@ -21,44 +26,18 @@ srp = sirope.Sirope()
 #srp.save(noticias[2])
 #srp.save(noticias[3])
 
+
+
 appdata = {"session": True}
 
 @app.route("/")
 def index():
     return flask.send_from_directory(app.static_folder, "index.html")
 
-@app.route("/noticias")
-def noticias_page():
-    noticias = srp.load_all(Noticia)
-    if not noticias:
-        return flask.abort(404)
-    print("session", appdata["session"])
-    return flask.render_template("noticias.html", noticias=noticias, sesion = appdata["session"])
 
-@app.route("/noticia/<int:noticia_id>")
-def noticia_page(noticia_id):
-    noticias = srp.load_all(Noticia)
-    noticia = next((n for n in noticias if n.ID == noticia_id), None)
-    if noticia:
-        return flask.render_template("noticia.html", noticia=noticia, sesion = appdata["session"])
-    else:
-        return flask.abort(404)
-    
-@app.route("/noticias/b/")
-def busqueda():
-    query = flask.request.args.get("q")
-    if query is None:
-        return flask.abort(404)
-    if not query:
-        return flask.redirect("/noticias")
-    
-    noticias = srp.load_all(Noticia)
-    resultados = [n for n in noticias if query.lower() in n.titulo.lower() or query.lower() in n.subtitulo.lower()]
-    return flask.render_template("noticias.html", noticias = resultados)
 
-@app.route("/noticias/publicar/")
-def publicar():
-    return flask.send_from_directory(app.static_folder, "crear-noticia.html")
+
+
 
 @app.route("/api/c/noticia", methods = ["POST"])
 def publicar_endpoint():

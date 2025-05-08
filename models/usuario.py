@@ -1,23 +1,18 @@
 import flask_login
 
-class Usuario(flask_login.UsuarioMixin):
-    def __init__(self, nombre, apellido):
-        self.__nombre = nombre
-        self.__apellido = apellido
-        self.__ID = random.randint(1, 1000)
-        
+class Usuario(flask_login.UserMixin):
+    def __init__(self, email, password):
+        self.__email = email
+        self.__password = password
     
     @property
-    def nombre(self):
-        return self.__nombre
+    def email(self):
+        return self.__email
     
-    @property
-    def apellido(self):
-        return self.__apellido
-    
-    @property
     def ID(self):
-        return self.__ID
+        return self.__email
     
-    def __str__(self):
-        return f"{self.__nombre} {self.__apellido}"
+    def check_password(self, password):
+        return self.__password == password
+    
+    

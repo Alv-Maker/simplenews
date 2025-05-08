@@ -1,11 +1,16 @@
-import random
+import models.periodista as periodista
 
 class Noticia:
+
+
     def __init__(self, titulo, subtitulo, contenido, periodista):
         self.__titulo = titulo
         self.__subtitulo = subtitulo
         self.__contenido = contenido
-        self.__ID = random.randint(1, 1000)  # Genera un ID aleatorio entre 1 y 1000
+        if not hasattr(Noticia, '_next_id'):
+            Noticia._next_id = 1001
+        self.__ID = Noticia._next_id
+        Noticia._next_id += 1
         self.__vistas = 0
         self.__likes = 0
         self.__comentarios = []  # Inicializa la lista de comentarios
@@ -52,4 +57,6 @@ class Noticia:
 
     def add_comentario(self, comentario):
         self.__comentarios.append(comentario)
+
+
     
