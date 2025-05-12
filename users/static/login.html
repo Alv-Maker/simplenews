@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Creación de factura</title>
+        <script type="text/javascript">
+            /*function chkName()
+            {
+                const dvError = document.getElementById("dvError");
+                const edName = document.getElementById("edName").value;
+                let toret = true;
+                dvError.style.display = "none";
+
+                if (edName == null || edName.length == 0){
+                    const np = document.createElement("p");
+
+                    np.textContent = "ERROR: no hay nombre";
+                    dvError.style.display="block";
+                    dvError.appendChild(np);
+                    return false;
+                }
+
+                return true;
+            }*/
+
+            function chkName()
+            {
+                const form = document.getElementById("frmInputName");
+                const dvError = document.getElementById("dvError");
+
+                for (j in form.childNodes){
+                    var i = form.childNodes[j]
+                    if(i.type == "text" && (i.value.length === 0 || i.value == null)){
+                        const np = document.createElement("p");
+
+                        np.textContent = "ERROR: no hay " + i.name;
+                        dvError.style.display="block";
+                        dvError.appendChild(np);
+                        return false;
+                    }
+
+                }
+                return true
+            }
+        </script>
+           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    </head>
+    <body>
+        <h2 class="display-2">Crear noticia</h2>
+        <form id="frmInputName"
+                method="POST"
+                action="/api/l/login"
+                onsubmit="return chkName()"
+                >
+                <label class="form-label" for="username">E-mail:</label>
+            <input class="form-control" type="text" id="username" name="username"/>
+            <br>
+            <label class="form-label" for="password">Contraseña:</label>
+            <input class="form-control" type="password" id="password" name="password"/>
+            <br>
+            <input type="submit" id="btSubmit" value="Log-in"/>
+        </form>
+
+        <div id="dvError" style="background-color: red; color: white; display: none;">
+        </div>
+    </body>
+</html>

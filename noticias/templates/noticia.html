@@ -26,13 +26,13 @@
   
           {% if not sesion %}
           <div class="text-end">
-            <button type="button" class="btn btn-outline-light me-2">Iniciar sesión</button>
-            <button type="button" class="btn btn-warning">Registrarse</button>
+            <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/login/login'">Iniciar sesión</button>
+            <button type="button" class="btn btn-warning" onclick="window.location.href='/login/register'">Registrarse</button>
           </div>
           {% else %}
           <div class="text-end">
-            <button type="button" class="btn btn-outline-light me-2">Cerrar sesión</button>
-            <button type="button" class="btn btn-warning">Perfil</button>
+            <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/login/logout'">Cerrar sesión</button>
+            <button type="button" class="btn btn-warning" onclick="window.location.href='/login/profile'">Perfil</button>
         </div>
           {% endif %}
       </div>
@@ -41,8 +41,11 @@
 
    <div class="position-absolute top-50 start-50 translate-middle"
       style="width: 50%; padding: 20px; border-radius: 10px; background-color: rgba(255, 255, 255, 0.8);">
+      <button class="btn btn-danger" onclick="fetch('/api/d/noticia/{{ noticia.ID }}', { method: 'DELETE' }).then(response => { if (response.ok) { window.location.href = '/noticias'; } });">Eliminar</button>
       <p class="h1">{{ noticia.titulo }}</p>
       <p class="display-5">{{ noticia.subtitulo }}</h3>
+         <hr>
+      <p class="h5">Publicado por {{ noticia.periodista }}</p>
          <hr>
       <p>{{ noticia.contenido }}</p>
    </div>

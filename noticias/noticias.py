@@ -3,26 +3,29 @@ import jinja2
 import flask_login
 import sirope
 from models.noticia import Noticia
+from models.usuario import Usuario
 
 noticiasb = flask.Blueprint("noticias", __name__, template_folder="templates", static_folder="static")
 
 srp = sirope.Sirope()
-appdata = {"session": True}
+
+
 
 
 @noticiasb.route("/")
 def noticias_page():
+
     noticias = list(srp.load_all(Noticia))
     noticias.sort(key=lambda x: x.ID, reverse=True)
-    print("session", appdata["session"])
-    return flask.render_template("noticias.html", noticias=noticias, sesion = appdata["session"])
+    print("session", flask_login.current_user)
+    return flask.render_template("noticias.html", noticias=noticias, sesion = Usuario.current_user() != None)
 
 @noticiasb.route("/<int:noticia_id>/")
 def noticia_page(noticia_id):
-    noticias = srp.load_all(Noticia)
-    noticia = next((n for n in noticias if n.ID == noticia_id), None)
+    noticiasdb = srp.load_all(Noticia)
+    noticia = next((n for n in noticiasdb if n.ID == noticia_id), None)
     if noticia:
-        return flask.render_template("noticia.html", noticia=noticia, sesion = appdata["session"])
+        return flask.render_template("noticia.html", noticia=noticia, sesion =  Usuario.current_user() != None)
     else:
         return flask.abort(404)
     
