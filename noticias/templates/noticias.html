@@ -15,7 +15,7 @@
     <div class="container-fluid" style="padding-left: 0px;">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-center">
         <a href="/" class="navbar-brand">
-          <img src="/noticias/static/img/logo.png" alt="Logo" style="height: 40px; width: auto;" class="d-inline-block align-text-top">
+          <img src="/static/img/logo.png" alt="Logo" style="height: 40px; width: auto;" class="d-inline-block align-text-top">
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
@@ -30,15 +30,15 @@
 
         {% if not sesion %}
         <div class="text-end">
-          <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/login/login'">Iniciar sesión</button>
-          <button type="button" class="btn btn-warning" onclick="window.location.href='/login/register'">Registrarse</button>
+          <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/users/'">Iniciar sesión</button>
+          <button type="button" class="btn btn-warning" onclick="window.location.href='/users/register'">Registrarse</button>
         </div>
         {% else %}
         <div class="text-end">
           <button type="button" class="btn btn-outline-light me-2" onclick="fetch('/api/l/logout', {
             method: 'POST',
         })">Cerrar sesión</button>
-          <button type="button" class="btn btn-warning" onclick="window.location.href='/login/profile'">Perfil</button>
+          <button type="button" class="btn btn-warning" onclick="window.location.href='/users/profile'">Perfil</button>
         </div>
         {% endif %}
       </div>
