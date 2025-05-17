@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Iniciar sesión</title>
+        <title>Registro</title>
         <script type="text/javascript">
             
 
@@ -22,19 +22,27 @@
                     }
 
                 }
+                if (form.password.value !== form.password2.value) {
+                    const np = document.createElement("p");
+                    np.textContent = "ERROR: las contraseñas no coinciden";
+                    dvError.style.display = "block";
+                    dvError.appendChild(np);
+                    return false;
+                }
                 return true
             }
         </script>
            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body>
+    <body style="background-image: url('/noticias/static/img/fondo-noticia.jpg');" class="bg-cover bg-center align-items-center" >
         <div class="position-absolute top-50 start-50 translate-middle"
       style="width: 50%; padding: 20px; border-radius: 10px; background-color: rgba(255, 255, 255, 0.8);">
-        <h2 class="display-2">Inicio de sesión</h2>
+      <img src="/noticias/static/img/logo.png" alt="Logo" style="height: 80px; width: 160px;" class="d-inline-block align-text-top">
+        <h2 class="display-2">Registrar usuario</h2>
         <form id="frmInputName"
                 method="POST"
-                action="/api/l/login"
+                action="/api/l/register"
                 onsubmit="return chkName()"
                 >
                 <label class="form-label" for="username">E-mail:</label>
@@ -43,7 +51,9 @@
             <label class="form-label" for="password">Contraseña:</label>
             <input class="form-control" type="password" id="password" name="password"/>
             <br>
-            <input type="submit" id="btSubmit" value="Log-in"/>
+            <label class="form-label" for="password2">Repetir contraseña:</label>
+            <input class="form-control" type="password" id="password2" name="password2"/>
+            <input type="submit" id="btSubmit" value="Registrarse"/>
         </form>
 
         <div id="dvError" style="background-color: red; color: white; display: none;">
