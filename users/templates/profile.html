@@ -30,15 +30,15 @@
       <img src="/static/img/logo.png" alt="Logo" style="height: 80px; width: 160px;" class="d-inline-block align-text-top">
         <h2 class="display-2">Registrar usuario</h2>
         <form id="frmInputName"
-                method="POST"
+                method="post"
                 action="/api/l/update/{{ usuario.id }}"
                 onsubmit="return chkForm()"
                 >
                 <label class="form-label" for="email">E-mail:</label>
-            <input class="form-control" type="text" id="email" name="email"> {{ usuario.email }} </input>
+            <input class="form-control" type="text" id="email" name="email" value="{{ usuario.email }} "/>
             <br>
             <label class="form-label" for="username">Nombre de usuario:</label>
-            <input class="form-control" type="text" id="name" name="name" disabled> {{ usuario.username }} </input>
+            <input class="form-control" type="text" id="name" name="name" disabled value="{{ usuario.username }}"/>
             <label class="form-label" for="name">El nombre de usuario no puede modificarse</label>
             <br>
             <label class="form-label" for="password">Contraseña:</label>
@@ -46,7 +46,7 @@
             <br>
             <label class="form-label" for="password2">Repetir contraseña:</label>
             <input class="form-control" type="password" id="password2" name="password2"/>
-            <input type="submit" id="btSubmit" value="Registrarse"/>
+            <input type="submit" id="btSubmit" class="btn btn-secondary" value="Guardar datos"/>
         </form>
 
         <label class="form-label" for="chkDelete">Si desea eliminar su cuenta, primero marque este checkbox::</label>
