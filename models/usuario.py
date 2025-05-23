@@ -11,6 +11,10 @@ class Usuario(flask_login.UserMixin):
     def email(self):
         return self.__email
     
+    @property.setter
+    def email(self, email):
+        self.__email = email
+    
     @property
     def username(self):
         return self.__username
@@ -18,6 +22,9 @@ class Usuario(flask_login.UserMixin):
     
     def check_password(self, password):
         return tools.check_password_hash(self.__password, password)
+    
+    def set_password(self, password):
+        self.__password = tools.generate_password_hash(password)
 
     @property
     def id(self):

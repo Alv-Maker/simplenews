@@ -5,7 +5,8 @@ import jinja2
 import flask_login
 import sirope
 from models.noticia import Noticia
-from models.noticiaid import NoticiaID
+from models.ids import NoticiaID
+from models.comentario import ComentarioID
 from models.usuario import Usuario
 import signal
 
@@ -102,16 +103,13 @@ def update_user(id):
     user = srp.find_first(Usuario, lambda x: x.id == id)
     if user:
         if flask.request.form.get("email"):
-            user.username = flask.request.form.get("email")
-        if flask.request.form.get("username"):
-            user.username = flask.request.form.get("username")
+            user.email = flask.request.form.get("email")
         if flask.request.form.get("password"):
-            user.password = flask.request.form.get("password")
+            user.set_password(flask.request.form.get("password"))
         srp.save(user)
-        return flask.jsonify({"status": "success", "message": "User updated successfully"}), 200
 
-        return flask.redirect("/users")  # Redirect to login page if authentication fails
-    
+        return flask.redirect("/noticias")  # Redirect to noticias page after updating user
+
 @apib.route("/l/checkname", methods=["POST"])
 def check_username():
     #username = flask.request.json.get("username")
