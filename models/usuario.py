@@ -1,21 +1,27 @@
 import flask_login
+import werkzeug.security as tools
 
 class Usuario(flask_login.UserMixin):
-    def __init__(self, email, password):
+    def __init__(self, email, password, username):
         self.__email = email
-        self.__password = password
+        self.__password = tools.generate_password_hash(password)
+        self.__username = username
 
     @property
     def email(self):
         return self.__email
+    
+    @property
+    def username(self):
+        return self.__username
 
     
     def check_password(self, password):
-        return self.__password == password
+        return tools.check_password_hash(self.__password, password)
 
     @property
     def id(self):
-        return self.__email
+        return self.__username
 
     @staticmethod
     def current_user():
@@ -26,11 +32,11 @@ class Usuario(flask_login.UserMixin):
         return usr
     
     @staticmethod
-    def find(srp, email):
-       print("Finding user by email:", email)
-       if srp.find_first(Usuario, lambda x: x.id == email):
+    def find(srp, username):
+       print("Finding user by username:", username)
+       if srp.find_first(Usuario, lambda x: x.id == username):
            print("User found")
-           return srp.find_first(Usuario, lambda x: x.id == email)
+           return srp.find_first(Usuario, lambda x: x.id == username)
        else:
            print("User not found")
            return None
