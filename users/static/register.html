@@ -5,7 +5,7 @@
         <script type="text/javascript">
             
 
-            function chkName()
+            function chkForm()
             {
                 const form = document.getElementById("frmInputName");
                 const dvError = document.getElementById("dvError");
@@ -29,7 +29,33 @@
                     dvError.appendChild(np);
                     return false;
                 }
+
+                
                 return true
+            }
+
+            function comprobarunico() {
+                const form = document.getElementById("frmInputName");
+                const dvError = document.getElementById("dvError");
+                dvError.style.display="none";
+                dvError.innerHTML = "";
+                fetch('/api/l/checkname?username=' + form.username.value, {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists == "true") {
+                            const np = document.createElement("p");
+                            np.textContent = "ERROR: el nombre de usuario ya existe";
+                            form.username.value = "";
+                            form.username.className = "form-control is-invalid";
+                            dvError.style.display = "block";
+                            dvError.appendChild(np);
+                        }
+                        else{
+                            form.username.className = "form-control is-valid";
+                        }
+                    });
             }
         </script>
            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -43,17 +69,20 @@
         <form id="frmInputName"
                 method="POST"
                 action="/api/l/register"
-                onsubmit="return chkName()"
+                onsubmit="return chkForm()"
                 >
-                <label class="form-label" for="username">E-mail:</label>
-            <input class="form-control" type="text" id="username" name="username"/>
+            <label class="form-label" for="email">E-mail:</label>
+            <input class="form-control" type="text" id="email" name="email"/>
+            <br>
+            <label class="form-label" for="username">Nombre de usuario:</label>
+            <input class="form-control" type="text" id="username" name="username" onchange="comprobarunico()"/>
             <br>
             <label class="form-label" for="password">Contraseña:</label>
             <input class="form-control" type="password" id="password" name="password"/>
             <br>
             <label class="form-label" for="password2">Repetir contraseña:</label>
             <input class="form-control" type="password" id="password2" name="password2"/>
-            <input type="submit" id="btSubmit" value="Registrarse"/>
+            <input class="btn btn-secondary" type="submit" id="btSubmit" value="Registrarse"/>
         </form>
 
         <div id="dvError" style="background-color: red; color: white; display: none;">

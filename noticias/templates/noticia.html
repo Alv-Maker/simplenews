@@ -31,7 +31,14 @@
           </div>
           {% else %}
           <div class="text-end">
-            <button type="button" class="btn btn-outline-light me-2" onclick="fetch('/api/l/logout', { method: 'POST' })">Cerrar sesión</button>
+            <button type="button" class="btn btn-outline-light me-2" onclick="fetch('/api/l/logout', {
+            method: 'POST',
+        })
+            .then(response => {
+              if (response.redirected) {
+                window.location.reload();
+              }
+            })">Cerrar sesión</button>
             <button type="button" class="btn btn-warning" onclick="window.location.href='/users/profile'">Perfil</button>
         </div>
           {% endif %}
@@ -48,6 +55,7 @@
       <p  style="font-size: large;">{{ noticia.subtitulo }}</h3>
          <hr>
       <p class="h5">Publicado por {{ noticia.periodista }}</p>
+      <p style="font-size: small;">Fecha de publicación: {{ noticia.fecha_formateada }}</p>
          <hr>
       <p>{{ noticia.contenido }}</p>
    </div>

@@ -1,14 +1,13 @@
-import models.periodista as periodista
 import datetime
 import random
 
 class Noticia:
 
-    def __init__(self, titulo, subtitulo, contenido, periodista):
+    def __init__(self, titulo, subtitulo, contenido, periodista, idunique):
         self.__titulo = titulo
         self.__subtitulo = subtitulo
         self.__contenido = contenido
-        self.__ID = random.randint(1, 1000000)  # Genera un ID aleatorio entre 1 y 1000000
+        self.__ID = idunique.getAndIncrementID()  # Genera un ID único para la noticia
         self.__vistas = 0
         self.__likes = 0
         self.__comentarios = []  # Inicializa la lista de comentarios
@@ -41,6 +40,10 @@ class Noticia:
     @property
     def fecha(self):
         return self.__fecha
+    
+    @property
+    def fecha_formateada(self):
+        return self.__fecha.strftime("%d/%m/%Y %H:%M:%S")  # Formato de fecha y hora
     
     @vistas.setter
     def vistas(self, vistas):
