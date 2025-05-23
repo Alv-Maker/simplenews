@@ -24,3 +24,12 @@ def register_page():
         return flask.redirect("/noticias")
     else:
         return flask.send_from_directory(loginb.static_folder, "register.html")
+
+@loginb.route("/profile")
+def profile_page():
+    if Usuario.current_user() == None:
+        flask.flash("Debes iniciar sesión para acceder a tu perfil")
+        return flask.redirect("/login")
+    else:
+        user = Usuario.current_user()
+        return flask.render_template("profile.html", usuario=user)
