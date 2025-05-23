@@ -85,6 +85,31 @@ def login():
     
         return flask.redirect("/noticias")
     else:
+
+        return flask.redirect("/login")  # Redirect to login page if authentication fails
+
+@apib.route("/l/delete/<id>", methods=["DELETE"])
+def delete_user(id):
+    user = srp.find_first(Usuario, lambda x: x.id == id)
+    if user:
+        srp.delete(user.__oid__)
+        return flask.jsonify({"status": "success", "message": "User deleted successfully"}), 200
+    else:
+        return flask.jsonify({"status": "error", "message": "User not found"}), 404
+
+@apib.route("/l/update/<id>", methods=["POST"])
+def update_user(id):
+    user = srp.find_first(Usuario, lambda x: x.id == id)
+    if user:
+        if flask.request.form.get("email"):
+            user.username = flask.request.form.get("email")
+        if flask.request.form.get("username"):
+            user.username = flask.request.form.get("username")
+        if flask.request.form.get("password"):
+            user.password = flask.request.form.get("password")
+        srp.save(user)
+        return flask.jsonify({"status": "success", "message": "User updated successfully"}), 200
+
         return flask.redirect("/users")  # Redirect to login page if authentication fails
     
 @apib.route("/l/checkname", methods=["POST"])
@@ -104,3 +129,4 @@ def handle_exit(signum, frame):
         srp.delete(i.__oid__)
     srp.save(idunique)
     exit(0)
+

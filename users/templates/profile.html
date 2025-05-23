@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Registro</title>
+        <script type="text/javascript">
+            
+
+            function chkForm()
+            {
+                const form = document.getElementById("frmInputName");
+                const dvError = document.getElementById("dvError");
+
+                
+                if (form.password.value !== form.password2.value) {
+                    const np = document.createElement("p");
+                    np.textContent = "ERROR: las contraseñas no coinciden";
+                    dvError.style.display = "block";
+                    dvError.appendChild(np);
+                    return false;
+                }
+                return true
+            }
+        </script>
+           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    </head>
+    <body style="background-image: url('/noticias/static/img/fondo-noticia.jpg');" class="bg-cover bg-center align-items-center" >
+        <div class="position-absolute top-50 start-50 translate-middle"
+      style="width: 50%; padding: 20px; border-radius: 10px; background-color: rgba(255, 255, 255, 0.8);">
+      <img src="/static/img/logo.png" alt="Logo" style="height: 80px; width: 160px;" class="d-inline-block align-text-top">
+        <h2 class="display-2">Registrar usuario</h2>
+        <form id="frmInputName"
+                method="post"
+                action="/api/l/update/{{ usuario.id }}"
+                onsubmit="return chkForm()"
+                >
+                <label class="form-label" for="email">E-mail:</label>
+            <input class="form-control" type="text" id="email" name="email" value="{{ usuario.email }} "/>
+            <br>
+            <label class="form-label" for="username">Nombre de usuario:</label>
+            <input class="form-control" type="text" id="name" name="name" disabled value="{{ usuario.username }}"/>
+            <label class="form-label" for="name">El nombre de usuario no puede modificarse</label>
+            <br>
+            <label class="form-label" for="password">Contraseña:</label>
+            <input class="form-control" type="password" id="password" name="password"/>
+            <br>
+            <label class="form-label" for="password2">Repetir contraseña:</label>
+            <input class="form-control" type="password" id="password2" name="password2"/>
+            <input type="submit" id="btSubmit" class="btn btn-secondary" value="Guardar datos"/>
+        </form>
+
+        <label class="form-label" for="chkDelete">Si desea eliminar su cuenta, primero marque este checkbox::</label>
+        <input type="checkbox" id="chkDelete" name="chkDelete" value="0" onclick="document.getElementById('btDelete').disabled = !this.checked;">
+
+        <button id="btDelete" disabled type="button" class="btn btn-danger" onclick="fetch('/api/l/delete/{{ usuario.id }}', { method: 'DELETE' }).then(response => { if (response.ok) { window.location.href = '/noticias'; } });">Eliminar cuenta</button>
+
+        <div id="dvError" style="background-color: red; color: white; display: none;">
+        </div>
+        </div>
+    </body>
+</html>
