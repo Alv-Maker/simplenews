@@ -21,15 +21,19 @@ apib = flask.Blueprint("api", __name__, template_folder="templates", static_fold
 
 srp = sirope.Sirope()
 
-idunique = srp.find_first(NoticiaID, lambda x : True)
-
-for i in srp.load_all(NoticiaID):
-    print("ID unique found", i.ID)
 
 
-if idunique == None:
-    idunique = NoticiaID()
-    srp.save(idunique)
+@apib.before_request
+def before_request():
+    idunique = srp.find_first(NoticiaID, lambda x : True)
+
+
+
+
+    if idunique == None:
+        idunique = NoticiaID()  
+        srp.save(idunique)
+
 
 @apib.route("/c/noticia", methods = ["POST"])
 def publicar_endpoint():
@@ -41,6 +45,7 @@ def publicar_endpoint():
     else:
         periodistac = Usuario.current_user().id
     srp.save(Noticia(titulo, subtitulo, contenido, periodistac, idunique))
+    
     return flask.redirect("/noticias")
 
 @apib.route("/l/logout", methods = ["POST"])
@@ -134,6 +139,7 @@ def handle_exit(signum, frame):
         for i in ls:
             srp.delete(i.__oid__)
         srp.save(idunique)
+        
         print("Exiting gracefully...")
         print("NoticiasID saved:", idunique.ID)
         exit(0)
@@ -154,8 +160,25 @@ def comentar_endpoint(noticia_id):
         return flask.jsonify({"status": "error", "message": "Noticia no encontrada"}), 404
 
     print(type(contenido), type(periodistac))
-    comentario = Comentario(contenido, periodistac)
+    comentario = Comentario(contenido, periodistac, noticia.getnxtcmntid())
     oid = srp.save(comentario)
     noticia.add_comentario(oid)
     srp.save(noticia)
-    return flask.jsonify({"status": "success", "message": "Comentario agregado"}), 200
+    return flask.redirect(f"/noticias/{noticia_id}")  # Redirect to the noticia page after commenting
+
+@apib.route("/d/comentario/<noticia_id>/<int:comentario_id>", methods=["DELETE"])
+def delete_comentario_endpoint(noticia_id, comentario_id):
+    noticia = srp.find_first(Noticia, lambda x: x.ID == int(noticia_id))
+    if not noticia:
+        return flask.jsonify({"status": "error", "message": "Noticia no encontrada"}), 404
+
+    comentario = srp.find_first(Comentario, lambda x: x.ID == comentario_id)
+    if not comentario:
+        return flask.jsonify({"status": "error", "message": "Comentario no encontrado"}), 404
+
+    if noticia.remove_comentario(comentario.__oid__):
+        srp.delete(comentario.__oid__)
+        srp.save(noticia)
+        return flask.jsonify({"status": "success", "message": "Comentario eliminado"}), 200
+    else:
+        return flask.jsonify({"status": "error", "message": "No se pudo eliminar el comentario"}), 500

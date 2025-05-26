@@ -4,11 +4,11 @@ import random
 
 class Comentario:    
 
-    def __init__(self, contenido, autor, noticia_id=None):
+    def __init__(self, contenido, autor, id):
         self.__contenido = contenido
         self.__autor = autor
         self.__ID = random.randint(1, 1000)
-        self.__noticia_id = noticia_id
+        self.__noticia_id = id
         self.__fecha = datetime.datetime.now()
     
     @property

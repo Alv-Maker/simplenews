@@ -1,9 +1,10 @@
 import datetime
 import random
+from models.ids import NoticiaID
 
 class Noticia:
 
-    def __init__(self, titulo, subtitulo, contenido, periodista, idunique):
+    def __init__(self, titulo, subtitulo, contenido, periodista, idunique: NoticiaID):
         self.__titulo = titulo
         self.__subtitulo = subtitulo
         self.__contenido = contenido
@@ -68,13 +69,13 @@ class Noticia:
         self.__comentarios.append(comentario)
 
     def remove_comentario(self, comentario):
-        for c in self.__comentarios:
-            if c.id == comentario.id:
-                self.__comentarios.remove(c)
-                break
+        for i in self.__comentarios:
+            if i == comentario:
+                self.__comentarios.remove(i)
+                return True
+        
+        return False
 
     def getnxtcmntid(self):
-        cmnt_id = self.__nxt_cmnt_id
-        self.__nxt_cmnt_id += 1
-        return cmnt_id
+        return len(self.comentarios)+1
     
