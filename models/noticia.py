@@ -13,6 +13,7 @@ class Noticia:
         self.__comentarios = []  # Inicializa la lista de comentarios
         self.__periodista = periodista  # Almacena el periodista que creó la noticia
         self.__fecha = datetime.datetime.now()  # Almacena la fecha de creación de la noticia
+        self.__nxt_cmnt_id = 1
     @property
     def titulo(self):
         return self.__titulo
@@ -22,9 +23,12 @@ class Noticia:
     @property
     def contenido(self):
         return self.__contenido
+
     @property
     def ID(self):
         return self.__ID
+    
+
     @property
     def vistas(self):
         return self.__vistas
@@ -53,6 +57,7 @@ class Noticia:
     def likes(self, likes):
         self.__likes = likes
 
+
     def add_vista(self):
         self.__vistas += 1
 
@@ -62,5 +67,14 @@ class Noticia:
     def add_comentario(self, comentario):
         self.__comentarios.append(comentario)
 
+    def remove_comentario(self, comentario):
+        for c in self.__comentarios:
+            if c.id == comentario.id:
+                self.__comentarios.remove(c)
+                break
 
+    def getnxtcmntid(self):
+        cmnt_id = self.__nxt_cmnt_id
+        self.__nxt_cmnt_id += 1
+        return cmnt_id
     

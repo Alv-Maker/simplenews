@@ -39,29 +39,32 @@
                 const dvError = document.getElementById("dvError");
                 dvError.style.display="none";
                 dvError.innerHTML = "";
-                fetch('/api/l/checkname?username=' + form.username.value, {
-                    method: 'POST'
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.exists == "true") {
-                            const np = document.createElement("p");
-                            np.textContent = "ERROR: el nombre de usuario ya existe";
-                            form.username.value = "";
-                            form.username.className = "form-control is-invalid";
-                            dvError.style.display = "block";
-                            dvError.appendChild(np);
-                        }
-                        else{
-                            form.username.className = "form-control is-valid";
-                        }
-                    });
+                if( form.username.value.length !== 0 && form.username.value != null){
+
+                    fetch('/api/l/checkname?username=' + form.username.value, {
+                        method: 'POST'
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists == "true") {
+                                const np = document.createElement("p");
+                                np.textContent = "ERROR: el nombre de usuario ya existe";
+                                form.username.value = "";
+                                form.username.className = "form-control is-invalid";
+                                dvError.style.display = "block";
+                                dvError.appendChild(np);
+                            }
+                            else{
+                                form.username.className = "form-control is-valid";
+                            }
+                        });
+                    }
             }
         </script>
            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body style="background-image: url('/noticias/static/img/fondo-noticia.jpg');" class="bg-cover bg-center align-items-center" >
+    <body style="background: linear-gradient(135deg, #0214288d 0%, #1848e5 100%); min-height: 100vh;">
         <div class="position-absolute top-50 start-50 translate-middle"
       style="width: 50%; padding: 20px; border-radius: 10px; background-color: rgba(255, 255, 255, 0.8);">
       <img src="/static/img/logo.png" alt="Logo" style="height: 80px; width: 160px;" class="d-inline-block align-text-top">

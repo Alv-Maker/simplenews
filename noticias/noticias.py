@@ -24,8 +24,12 @@ def noticias_page():
 def noticia_page(noticia_id):
     noticiasdb = srp.load_all(Noticia)
     noticia = next((n for n in noticiasdb if n.ID == noticia_id), None)
+    arrcom = []
+    
+    for comentario in noticia.comentarios:
+        arrcom.append(srp.load(comentario))
     if noticia:
-        return flask.render_template("noticia.html", noticia=noticia, sesion =  Usuario.current_user() != None, usuario = Usuario.current_user())
+        return flask.render_template("noticia.html", noticia=noticia, sesion =  Usuario.current_user() != None, usuario = Usuario.current_user(), comentarios = arrcom)
     else:
         return flask.abort(404)
     

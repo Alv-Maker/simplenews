@@ -6,12 +6,13 @@ class Usuario(flask_login.UserMixin):
         self.__email = email
         self.__password = tools.generate_password_hash(password)
         self.__username = username
+        self.logable = True  # Indicates if the user can log in
 
     @property
     def email(self):
         return self.__email
     
-    @property.setter
+    @email.setter
     def email(self, email):
         self.__email = email
     
@@ -21,7 +22,7 @@ class Usuario(flask_login.UserMixin):
 
     
     def check_password(self, password):
-        return tools.check_password_hash(self.__password, password)
+        return tools.check_password_hash(self.__password, password) and self.logable
     
     def set_password(self, password):
         self.__password = tools.generate_password_hash(password)
@@ -29,6 +30,11 @@ class Usuario(flask_login.UserMixin):
     @property
     def id(self):
         return self.__username
+    
+    def delete(self):
+        self.__email = "user@delet.ed"
+        self.logable = False
+        
 
     @staticmethod
     def current_user():

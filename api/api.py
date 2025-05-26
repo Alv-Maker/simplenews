@@ -1,12 +1,13 @@
 
 from http.client import HTTPResponse
+import os
 import flask
 import jinja2
 import flask_login
 import sirope
+from models.comentario import Comentario
 from models.noticia import Noticia
 from models.ids import NoticiaID
-from models.comentario import ComentarioID
 from models.usuario import Usuario
 import signal
 
@@ -14,11 +15,16 @@ signal.signal(signal.SIGINT, lambda s, f: handle_exit(s, f))
 signal.signal(signal.SIGTERM, lambda s, f: handle_exit(s, f))
 signal.signal(signal.SIGQUIT, lambda s, f: handle_exit(s, f))
 
+print("Starting API...")
+
 apib = flask.Blueprint("api", __name__, template_folder="templates", static_folder="static")
 
 srp = sirope.Sirope()
 
 idunique = srp.find_first(NoticiaID, lambda x : True)
+
+for i in srp.load_all(NoticiaID):
+    print("ID unique found", i.ID)
 
 
 if idunique == None:
@@ -93,7 +99,8 @@ def login():
 def delete_user(id):
     user = srp.find_first(Usuario, lambda x: x.id == id)
     if user:
-        srp.delete(user.__oid__)
+        user.delete()  # Mark the user as deleted
+        srp.save(user)
         return flask.jsonify({"status": "success", "message": "User deleted successfully"}), 200
     else:
         return flask.jsonify({"status": "error", "message": "User not found"}), 404
@@ -122,9 +129,33 @@ def check_username():
         return flask.jsonify({"status": "success", "exists": "false"}), 200
     
 def handle_exit(signum, frame):
-    ls = list(srp.load_all(NoticiaID))
-    for i in ls:
-        srp.delete(i.__oid__)
-    srp.save(idunique)
-    exit(0)
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        ls = list(srp.load_all(NoticiaID))
+        for i in ls:
+            srp.delete(i.__oid__)
+        srp.save(idunique)
+        print("Exiting gracefully...")
+        print("NoticiasID saved:", idunique.ID)
+        exit(0)
+    else:
+        print("Received signal to exit, but not in main process. Ignoring.")
+        
 
+@apib.route("/c/comentario/<noticia_id>", methods=["POST"])
+def comentar_endpoint(noticia_id):
+    contenido = flask.request.form.get("contenido")
+    if Usuario.current_user() is None:
+        flask.abort(403)
+    else:
+        periodistac = Usuario.current_user().id
+    
+    noticia = srp.find_first(Noticia, lambda x: x.ID == int(noticia_id))
+    if not noticia:
+        return flask.jsonify({"status": "error", "message": "Noticia no encontrada"}), 404
+
+    print(type(contenido), type(periodistac))
+    comentario = Comentario(contenido, periodistac)
+    oid = srp.save(comentario)
+    noticia.add_comentario(oid)
+    srp.save(noticia)
+    return flask.jsonify({"status": "success", "message": "Comentario agregado"}), 200

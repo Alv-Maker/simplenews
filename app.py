@@ -33,7 +33,7 @@ def index():
 
 @app.errorhandler(405)
 def method_not_allowed(e):
-    return flask.send_from_directory(app.static_folder, "405page.html"), 405
+    return flask.send_from_directory(app.static_folder, "405page.html"), 403
 
 
 
