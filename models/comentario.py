@@ -7,8 +7,7 @@ class Comentario:
     def __init__(self, contenido, autor, id):
         self.__contenido = contenido
         self.__autor = autor
-        self.__ID = random.randint(1, 1000)
-        self.__noticia_id = id
+        self.__ID =  id
         self.__fecha = datetime.datetime.now()
     
     @property
@@ -23,6 +22,11 @@ class Comentario:
     @property
     def fecha(self):
         return self.__fecha
+    
+    @contenido.setter
+    def contenido(self, nuevo_contenido):
+        self.__fecha = datetime.datetime.now()
+        self.__contenido = nuevo_contenido
     
     def editar(self, nuevo_contenido):
         self.__contenido = nuevo_contenido

@@ -16,7 +16,11 @@ def login_page():
     if Usuario.current_user() != None:
         return flask.redirect("/noticias")
     else:
-        return flask.send_from_directory(loginb.static_folder, "login.html")
+        if flask.get_flashed_messages():
+            error = flask.get_flashed_messages().pop(0)
+        else:
+            error = ""
+        return flask.render_template("login.html",error=error)
     
 @loginb.route("/register")
 def register_page():
@@ -33,3 +37,4 @@ def profile_page():
     else:
         user = Usuario.current_user()
         return flask.render_template("profile.html", usuario=user)
+    

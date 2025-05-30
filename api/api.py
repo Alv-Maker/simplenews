@@ -9,30 +9,30 @@ from models.comentario import Comentario
 from models.noticia import Noticia
 from models.ids import NoticiaID
 from models.usuario import Usuario
-import signal
 
-signal.signal(signal.SIGINT, lambda s, f: handle_exit(s, f))
-signal.signal(signal.SIGTERM, lambda s, f: handle_exit(s, f))
-signal.signal(signal.SIGQUIT, lambda s, f: handle_exit(s, f))
 
-print("Starting API...")
+
+
+
 
 apib = flask.Blueprint("api", __name__, template_folder="templates", static_folder="static")
 
 srp = sirope.Sirope()
 
-
-
-@apib.before_request
-def before_request():
-    idunique = srp.find_first(NoticiaID, lambda x : True)
+idunique = None
 
 
 
+idunique = srp.find_first(NoticiaID, lambda x: True)
+if idunique is None:
+    idunique = NoticiaID()
+    srp.save(idunique)
+print("API initialized with NoticiaID:", idunique.ID)
 
-    if idunique == None:
-        idunique = NoticiaID()  
-        srp.save(idunique)
+def update_noticia_id():
+    global idunique
+    #srp.delete(idunique.__oid__)
+    srp.save(idunique)
 
 
 @apib.route("/c/noticia", methods = ["POST"])
@@ -45,7 +45,7 @@ def publicar_endpoint():
     else:
         periodistac = Usuario.current_user().id
     srp.save(Noticia(titulo, subtitulo, contenido, periodistac, idunique))
-    
+    update_noticia_id()
     return flask.redirect("/noticias")
 
 @apib.route("/l/logout", methods = ["POST"])
@@ -97,8 +97,8 @@ def login():
     
         return flask.redirect("/noticias")
     else:
-
-        return flask.redirect("/login")  # Redirect to login page if authentication fails
+        flask.flash("Invalid username or password")  # Flash an error message
+        return flask.redirect("/users")  # Redirect to login page if authentication fails
 
 @apib.route("/l/delete/<id>", methods=["DELETE"])
 def delete_user(id):
@@ -128,23 +128,12 @@ def check_username():
     username = flask.request.args.get("username")
     user = Usuario.find(srp, username)
     if user:
-        print(user.id)
+        
         return flask.jsonify({"status": "error", "exists": "true"}), 400
     else:
         return flask.jsonify({"status": "success", "exists": "false"}), 200
     
-def handle_exit(signum, frame):
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        ls = list(srp.load_all(NoticiaID))
-        for i in ls:
-            srp.delete(i.__oid__)
-        srp.save(idunique)
-        
-        print("Exiting gracefully...")
-        print("NoticiasID saved:", idunique.ID)
-        exit(0)
-    else:
-        print("Received signal to exit, but not in main process. Ignoring.")
+
         
 
 @apib.route("/c/comentario/<noticia_id>", methods=["POST"])
@@ -182,3 +171,19 @@ def delete_comentario_endpoint(noticia_id, comentario_id):
         return flask.jsonify({"status": "success", "message": "Comentario eliminado"}), 200
     else:
         return flask.jsonify({"status": "error", "message": "No se pudo eliminar el comentario"}), 500
+    
+@apib.route("/update/comentario/<int:comentario_id>", methods=["POST"])
+def update_comentario_endpoint(comentario_id):
+    comentario = srp.find_first(Comentario, lambda x: x.ID == comentario_id)
+    if not comentario:
+        return flask.jsonify({"status": "error", "message": "Comentario no encontrado"}), 404
+
+    contenido = flask.request.form.get("contenido")
+    if contenido:
+        comentario.contenido = contenido
+        srp.save(comentario)
+        return flask.jsonify({"status": "success", "message": "Comentario actualizado"}), 200
+    else:
+        return flask.jsonify({"status": "error", "message": "Contenido del comentario no proporcionado"}), 400
+    
+

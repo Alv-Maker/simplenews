@@ -27,9 +27,11 @@ srp = sirope.Sirope()
 lm = flask_login.LoginManager()
 lm.init_app(app)
 
+
 @app.route("/")
 def index():
     return flask.send_from_directory(app.static_folder, "index.html")
+
 
 @app.errorhandler(405)
 def method_not_allowed(e):

@@ -12,6 +12,7 @@ class Noticia:
         self.__vistas = 0
         self.__likes = 0
         self.__comentarios = []  # Inicializa la lista de comentarios
+        self.__numcomentarios = 0  # Inicializa el contador de comentarios
         self.__periodista = periodista  # Almacena el periodista que creó la noticia
         self.__fecha = datetime.datetime.now()  # Almacena la fecha de creación de la noticia
         self.__nxt_cmnt_id = 1
@@ -67,6 +68,7 @@ class Noticia:
 
     def add_comentario(self, comentario):
         self.__comentarios.append(comentario)
+        self.__numcomentarios += 1
 
     def remove_comentario(self, comentario):
         for i in self.__comentarios:
@@ -77,5 +79,7 @@ class Noticia:
         return False
 
     def getnxtcmntid(self):
-        return len(self.comentarios)+1
+        toret = self.ID * 3 * (self.__numcomentarios+1) * 5
+        return toret 
+    
     

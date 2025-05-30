@@ -43,8 +43,8 @@ def busqueda():
     
     noticias = srp.load_all(Noticia)
     resultados = [n for n in noticias if query.lower() in n.titulo.lower() or query.lower() in n.subtitulo.lower()]
-    return flask.render_template("noticias.html", noticias = resultados)
+    return flask.render_template("noticias_busqueda.html", noticias = resultados, sesion = Usuario.current_user() != None, busqueda = query)
 
 @noticiasb.route("/publicar/")
 def publicar():
-    return flask.send_from_directory(noticiasb.static_folder, "crear-noticia.html")
+    return flask.render_template("crear_noticia.html", sesion = Usuario.current_user() != None)
