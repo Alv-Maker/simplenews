@@ -174,6 +174,7 @@ def delete_comentario_endpoint(noticia_id, comentario_id):
     
 @apib.route("/update/comentario/<int:comentario_id>", methods=["POST"])
 def update_comentario_endpoint(comentario_id):
+    current_url = flask.request.url
     comentario = srp.find_first(Comentario, lambda x: x.ID == comentario_id)
     if not comentario:
         return flask.jsonify({"status": "error", "message": "Comentario no encontrado"}), 404
@@ -182,8 +183,7 @@ def update_comentario_endpoint(comentario_id):
     if contenido:
         comentario.contenido = contenido
         srp.save(comentario)
-        return flask.jsonify({"status": "success", "message": "Comentario actualizado"}), 200
-    else:
-        return flask.jsonify({"status": "error", "message": "Contenido del comentario no proporcionado"}), 400
-    
+
+    return  flask.redirect(f"/noticias/{flask.request.form['noticia_id']}")  # Redirect to the current page after updating the comment
+
 
