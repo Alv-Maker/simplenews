@@ -57,6 +57,8 @@ def logout():
 @apib.route("/d/noticia/<int:id>", methods = ["DELETE"])
 def delete_noticia(id):
     noticia = srp.find_first(Noticia, lambda x: x.ID == id)
+    for i in noticia.comentarios:
+        srp.delete(i.__oid__)
     if srp.delete(noticia.__oid__):
         return flask.jsonify({"status": "success", "message": "Noticia eliminada"}), 200
     else:

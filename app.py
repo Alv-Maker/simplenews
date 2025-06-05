@@ -32,10 +32,27 @@ lm.init_app(app)
 def index():
     return flask.send_from_directory(app.static_folder, "index.html")
 
+@app.route("/about")
+def about():
+    return flask.send_from_directory(app.static_folder, "about.html")
+
 
 @app.errorhandler(405)
 def method_not_allowed(e):
     return flask.send_from_directory(app.static_folder, "405page.html"), 403
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return flask.send_from_directory(app.static_folder, "404page.html"), 404
+
+@app.before_request
+def before_request():
+    if(flask.request.path.startswith("/static") and not flask.request.path.startswith("/static/img")):
+        return flask.send_from_directory(app.static_folder, "404page.html"), 404
+    
+@app.errorhandler(500)
+def internal_server_error(e):
+    return flask.send_from_directory(app.static_folder, "500page.html"), 500
 
 
 
