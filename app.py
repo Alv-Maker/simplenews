@@ -34,7 +34,7 @@ def index():
 
 @app.route("/about")
 def about():
-    return flask.send_from_directory(app.static_folder, "about.html")
+    return flask.render_template("about.html", sesion = Usuario.current_user())
 
 
 @app.errorhandler(405)

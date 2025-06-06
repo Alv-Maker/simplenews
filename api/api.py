@@ -36,7 +36,7 @@ def update_noticia_id():
 
 
 @apib.route("/c/noticia", methods = ["POST"])
-def publicar_endpoint():
+def publicar_noticia():
     titulo = flask.request.form.get("titulo")
     subtitulo = flask.request.form.get("subtitulo")
     contenido = flask.request.form.get("contenido")
@@ -58,7 +58,7 @@ def logout():
 def delete_noticia(id):
     noticia = srp.find_first(Noticia, lambda x: x.ID == id)
     for i in noticia.comentarios:
-        srp.delete(i.__oid__)
+        srp.delete(i)
     if srp.delete(noticia.__oid__):
         return flask.jsonify({"status": "success", "message": "Noticia eliminada"}), 200
     else:
@@ -139,7 +139,7 @@ def check_username():
         
 
 @apib.route("/c/comentario/<noticia_id>", methods=["POST"])
-def comentar_endpoint(noticia_id):
+def publicar_comentario(noticia_id):
     contenido = flask.request.form.get("contenido")
     if Usuario.current_user() is None:
         flask.abort(403)
@@ -158,7 +158,7 @@ def comentar_endpoint(noticia_id):
     return flask.redirect(f"/noticias/{noticia_id}")  # Redirect to the noticia page after commenting
 
 @apib.route("/d/comentario/<noticia_id>/<int:comentario_id>", methods=["DELETE"])
-def delete_comentario_endpoint(noticia_id, comentario_id):
+def delete_comentario(noticia_id, comentario_id):
     noticia = srp.find_first(Noticia, lambda x: x.ID == int(noticia_id))
     if not noticia:
         return flask.jsonify({"status": "error", "message": "Noticia no encontrada"}), 404
