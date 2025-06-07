@@ -10,6 +10,7 @@
             {
                 const form = document.getElementById("frmInputName");
                 const dvError = document.getElementById("dvError");
+                dvError.innerHTML = ""; // Limpiar mensajes de error previos
 
                 
                 if (form.password.value !== form.password2.value) {
@@ -36,7 +37,7 @@
                     onsubmit="return chkForm()"
                     >
                     <label class="form-label" for="email">E-mail:</label>
-                <input class="form-control" type="text" id="email" name="email" value="{{ usuario.email }}"/>
+                <input class="form-control" type="email" id="email" name="email" value="{{ usuario.email }}"/>
                 
                 <label class="form-label" for="username">Nombre de usuario:</label>
                 <input class="form-control" type="text" id="name" name="name" disabled value="{{ usuario.username }}"/>

@@ -34,6 +34,7 @@ class Usuario(flask_login.UserMixin):
     def delete(self):
         self.__email = "user@delet.ed"
         self.logable = False
+        flask_login.logout_user()
         
 
     @staticmethod

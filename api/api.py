@@ -108,7 +108,7 @@ def delete_user(id):
     if user:
         user.delete()  # Mark the user as deleted
         srp.save(user)
-        return flask.jsonify({"status": "success", "message": "User deleted successfully"}), 200
+        return flask.jsonify({"status": "success", "message": "User deleted"}), 200
     else:
         return flask.jsonify({"status": "error", "message": "User not found"}), 404
 
@@ -175,7 +175,7 @@ def delete_comentario(noticia_id, comentario_id):
         return flask.jsonify({"status": "error", "message": "No se pudo eliminar el comentario"}), 500
     
 @apib.route("/update/comentario/<int:comentario_id>", methods=["POST"])
-def update_comentario_endpoint(comentario_id):
+def update_comentario(comentario_id):
     current_url = flask.request.url
     comentario = srp.find_first(Comentario, lambda x: x.ID == comentario_id)
     if not comentario:
